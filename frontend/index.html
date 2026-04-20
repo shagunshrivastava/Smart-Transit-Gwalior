@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transport Route & Fare Management</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- SVG Icons via Lucide CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+    <!-- Main Navigation (Hidden on Landing) -->
+    <nav class="navbar" id="main-nav" style="display: none;">
+        <div class="container nav-container">
+            <div class="nav-brand">
+                <i data-lucide="bus-front" style="color: var(--primary);"></i>
+                TransportApp
+            </div>
+            <div class="nav-links" id="nav-links-menu">
+                <a class="nav-link active" onclick="navigate('dashboard')">Home</a>
+                <a class="nav-link" onclick="navigate('history')">History</a>
+                <a class="nav-link" onclick="navigate('popular')">Popular Places</a>
+                <a class="nav-link" onclick="navigate('about')">About</a>
+                <a class="nav-link" onclick="navigate('help')">Help & Support</a>
+            </div>
+            
+            <div class="profile-menu">
+                <button class="profile-btn" onclick="toggleProfileMenu()">
+                    <span class="profile-avatar">J</span>
+                    <span id="user-name-display">John Doe</span>
+                    <i data-lucide="chevron-down" style="width: 16px;"></i>
+                </button>
+                <div class="dropdown" id="profile-dropdown">
+                    <div class="dropdown-header">
+                        <h4>John Doe</h4>
+                        <p>john.doe@example.com</p>
+                        <p style="font-size:12px; margin-top:4px;">DOB: 12 Jan 1990</p>
+                    </div>
+                    <a class="dropdown-item" onclick="handleLogout()">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <i data-lucide="log-out" style="width: 16px;"></i> Logout
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page 1: Landing (Login/Signup) -->
+    <div id="page-landing" class="page active">
+        <div class="split-screen">
+            <div class="landing-illustration">
+                <!-- Inline SVG Illustration replacing image placeholder for better UI -->
+                <svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="400" height="400" rx="24" fill="#E2E8F0" fill-opacity="0.5"/>
+                    <path d="M100 200C100 144.772 144.772 100 200 100C255.228 100 300 144.772 300 200C300 255.228 255.228 300 200 300" stroke="#16A34A" stroke-width="8" stroke-linecap="round"/>
+                    <circle cx="200" cy="200" r="30" fill="#16A34A"/>
+                    <circle cx="120" cy="200" r="10" fill="#22C55E"/>
+                    <circle cx="280" cy="200" r="10" fill="#22C55E"/>
+                    <path d="M150 250H250" stroke="#16A34A" stroke-width="8" stroke-linecap="round"/>
+                </svg>
+                <div style="position:absolute; bottom:40px; text-align:center; width:100%;">
+                    <h3 style="color:#16a34a; font-size:24px;">Smart City Transit</h3>
+                    <p style="color:#15803d; margin-top:8px;">Fast, reliable, and entirely transparent fares.</p>
+                </div>
+            </div>
+            
+            <div class="landing-form-container">
+                <div class="auth-card card">
+                    <div class="auth-header">
+                        <h2>Welcome Back</h2>
+                        <p>Enter your details to access your account</p>
+                    </div>
+
+                    <!-- Login Form -->
+                    <div id="login-form" class="form-view active">
+                        <div class="form-group">
+                            <label>Email / Username / Phone</label>
+                            <input type="text" class="form-control" placeholder="example@email.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" class="form-control" placeholder="••••••••">
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%; margin-top: 8px;" onclick="handleLoginSubmit()">
+                            Login to Dashboard
+                        </button>
+                        <div class="auth-toggle">
+                            New user? <a onclick="toggleAuth('signup')">Sign up</a>
+                        </div>
+                    </div>
+
+                    <!-- Signup Form -->
+                    <div id="signup-form" class="form-view">
+                        <div class="auth-header" style="margin-bottom: 20px;">
+                            <h2 style="font-size: 24px;">Create Account</h2>
+                        </div>
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" class="form-control" placeholder="John Doe">
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" class="form-control" placeholder="example@email.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <input type="tel" class="form-control" placeholder="+1 234 567 890">
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" class="form-control" placeholder="••••••••">
+                        </div>
+                        <div class="form-group">
+                            <label>Confirm Password</label>
+                            <input type="password" class="form-control" placeholder="••••••••">
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%; margin-top: 8px;" onclick="toggleAuth('login')">
+                            Create Account
+                        </button>
+                        <div class="auth-toggle">
+                            Already have an account? <a onclick="toggleAuth('login')">Login</a>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 2: Dashboard -->
+    <div id="page-dashboard" class="page">
+        <div class="container app-content">
+            <h2 style="margin-bottom: 24px; font-size: 24px;">Plan Your Journey</h2>
+            
+            <div class="dashboard-grid">
+                <!-- Map Image Placeholder -->
+                <div class="map-placeholder" style="padding:0;">
+                    <img src="map-image.png" alt="City Map Transport Routes" style="width:100%; height:100%; object-fit:cover;">
+                </div>
+
+                <!-- Right Side Controls -->
+                <div class="route-controls">
+                    <div class="card">
+                        <h3 style="margin-bottom: 20px; display:flex; align-items:center; gap:8px;">
+                            <i data-lucide="map-pin" style="color:var(--primary); width:20px;"></i> Location Setup
+                        </h3>
+                        
+                        <div class="form-group">
+                            <label>Select Source</label>
+                            <div class="custom-select">
+                                <select id="source-select">
+                                    <option value="" disabled selected>Where are you starting?</option>
+                                    <option value="Station">Central Station</option>
+                                    <option value="Airport">City Airport</option>
+                                    <option value="Downtown">Downtown Area</option>
+                                    <option value="University">City University</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Select Destination</label>
+                            <div class="custom-select">
+                                <select id="dest-select">
+                                    <option value="" disabled selected>Where are you going?</option>
+                                    <option value="Station">Central Station</option>
+                                    <option value="Airport">City Airport</option>
+                                    <option value="Downtown">Downtown Area</option>
+                                    <option value="University">City University</option>
+                                    <option value="Hospital">General Hospital</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div id="distance-info" style="display:none; margin-top:16px; padding:12px; background:#f0fdf4; border-radius:8px; border:1px solid #bbf7d0;">
+                            <div style="display:flex; justify-content:space-between; font-size:14px;">
+                                <span><i data-lucide="route" style="width:14px; vertical-align:middle; margin-right:4px;"></i> Dist: <strong>5.4 km</strong></span>
+                                <span><i data-lucide="clock" style="width:14px; vertical-align:middle; margin-right:4px;"></i> Time: <strong>~18 mins</strong></span>
+                            </div>
+                        </div>
+
+                        <h3 style="margin: 24px 0 16px; font-size: 16px;">Vehicle Options</h3>
+                        
+                        <div class="vehicle-options">
+                            <div class="vehicle-card" onclick="selectVehicle(this, 'bus-ac')">
+                                <div class="v-icon"><i data-lucide="bus" style="color:#16a34a;"></i></div>
+                                <div class="v-details">
+                                    <h4>Bus (AC)</h4>
+                                    <p>Comfortable group transit</p>
+                                </div>
+                                <div class="v-price">$2.50</div>
+                            </div>
+                            <div class="vehicle-card" onclick="selectVehicle(this, 'bus-nonac')">
+                                <div class="v-icon"><i data-lucide="bus-front" style="color:#64748b;"></i></div>
+                                <div class="v-details">
+                                    <h4>Bus (Non-AC)</h4>
+                                    <p>Standard transport</p>
+                                </div>
+                                <div class="v-price">$1.50</div>
+                            </div>
+                            <div class="vehicle-card" onclick="selectVehicle(this, 'cab')">
+                                <div class="v-icon"><i data-lucide="car" style="color:#16a34a;"></i></div>
+                                <div class="v-details">
+                                    <h4>Cab</h4>
+                                    <p>Private & fast</p>
+                                </div>
+                                <div class="v-price">$8.00</div>
+                            </div>
+                            <div class="vehicle-card" onclick="selectVehicle(this, 'erickshaw')">
+                                <div class="v-icon"><i data-lucide="zap" style="color:#eab308;"></i></div>
+                                <div class="v-details">
+                                    <h4>E-Rickshaw</h4>
+                                    <p>Eco-friendly short trips</p>
+                                </div>
+                                <div class="v-price">$3.50</div>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary" style="width: 100%; margin-top: 24px; padding: 14px;" onclick="goToRideDetails()">
+                            Proceed to Next <i data-lucide="arrow-right" style="width:18px;"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 3: Ride Details -->
+    <div id="page-ridedetails" class="page">
+        <div class="container app-content">
+            <button class="btn btn-outline" style="margin-bottom: 24px; padding: 8px 16px;" onclick="navigate('dashboard')">
+                <i data-lucide="arrow-left" style="width:16px;"></i> Back to Edit
+            </button>
+            
+            <h2 style="font-size: 28px; margin-bottom: 8px;">Review Ride Details</h2>
+            <p style="color: var(--text-muted); margin-bottom: 32px;">Verify your route and fare before confirming.</p>
+
+            <div class="dashboard-grid">
+                <!-- Map Placeholder for Ride Details -->
+                <div class="map-placeholder" style="padding:0;">
+                    <img src="map-image.png" alt="Ride Route Map" style="width:100%; height:100%; object-fit:cover;">
+                </div>
+                
+                <!-- Right Side Card -->
+                <div class="card">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 24px;">
+                    <div>
+                        <h4 style="color:var(--text-muted); font-size:13px; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;">Vehicle Type</h4>
+                        <div style="display:flex; align-items:center; gap:8px; font-weight:600; font-size:18px;">
+                            <i data-lucide="car" id="detail-icon" style="color:var(--primary);"></i>
+                            <span id="detail-vehicle-name">Cab</span>
+                        </div>
+                    </div>
+                    <div style="text-align:right;">
+                        <h4 style="color:var(--text-muted); font-size:13px; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;">Est. Arrival</h4>
+                        <div style="font-weight:600; font-size:18px; color:var(--primary);">14:30 PM</div>
+                    </div>
+                </div>
+
+                <div class="route-visual">
+                    <div class="route-point">
+                        <h4>Central Station</h4>
+                        <p>14:12 PM • 0 km</p>
+                    </div>
+                    <div class="route-point" style="margin-left: 0; margin-top:-10px;">
+                        <!-- Middle stop placeholder, usually hidden or dynamic -->
+                        <h4 style="font-weight:400; font-size:14px; color:var(--text-muted);">Main Street Int. (Stop)</h4>
+                    </div>
+                    <div class="route-point">
+                        <h4>Downtown Area</h4>
+                        <p>14:30 PM • 5.4 km</p>
+                    </div>
+                </div>
+
+                <div class="fare-breakdown">
+                    <div class="fare-row">
+                        <span>Base Fare</span>
+                        <span>$2.00</span>
+                    </div>
+                    <div class="fare-row">
+                        <span>Distance (5.4 km x $1.00)</span>
+                        <span>$5.40</span>
+                    </div>
+                    <div class="fare-row">
+                        <span>Vehicle Multiplier (x1.2)</span>
+                        <span>$1.08</span>
+                    </div>
+                    <div class="fare-row" style="color: #eab308;">
+                        <span>Surge Pricing (+10%)</span>
+                        <span>$0.85</span>
+                    </div>
+                    <div class="fare-row total">
+                        <span>Total Fare</span>
+                        <span style="color:var(--primary); font-size:24px;">$9.33</span>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" style="width: 100%; margin-top: 24px; padding: 16px; font-size: 18px;" onclick="startBookingFlow()">
+                    Book Ride Now
+                </button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Sections -->
+    <div id="page-history" class="page">
+        <div class="container app-content" style="max-width: 800px;">
+            <h2 style="margin-bottom: 24px;">Ride History</h2>
+            <div class="card" style="padding:0; overflow:hidden;">
+                <div class="history-item">
+                    <div>
+                        <div style="font-size:13px; color:var(--text-muted); margin-bottom:4px;">18 Apr 2026, 10:20 AM</div>
+                        <div style="font-weight:600;">University → Central Station</div>
+                        <div style="font-size:14px;display:flex;align-items:center;gap:4px;margin-top:4px;">
+                            <i data-lucide="bus" style="width:14px; color:var(--primary);"></i> Bus (AC)
+                        </div>
+                    </div>
+                    <div style="text-align:right;">
+                        <div style="font-weight:700;">$3.50</div>
+                        <span style="display:inline-block; margin-top:4px; padding:2px 8px; background:#dcfce7; color:#15803d; border-radius:12px; font-size:12px;">Completed</span>
+                    </div>
+                </div>
+                <div class="history-item">
+                    <div>
+                        <div style="font-size:13px; color:var(--text-muted); margin-bottom:4px;">15 Apr 2026, 08:15 AM</div>
+                        <div style="font-weight:600;">Home → Downtown Area</div>
+                        <div style="font-size:14px;display:flex;align-items:center;gap:4px;margin-top:4px;">
+                            <i data-lucide="car" style="width:14px; color:var(--primary);"></i> Cab
+                        </div>
+                    </div>
+                    <div style="text-align:right;">
+                        <div style="font-weight:700;">$12.00</div>
+                        <span style="display:inline-block; margin-top:4px; padding:2px 8px; background:#dcfce7; color:#15803d; border-radius:12px; font-size:12px;">Completed</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="page-popular" class="page">
+        <div class="container app-content">
+            <h2 style="margin-bottom: 24px;">Popular Routes & Places</h2>
+            <div class="dashboard-grid" style="grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap:24px;">
+                <div class="card">
+                    <img src="https://via.placeholder.com/300x150/16a34a/ffffff?text=City+Center" style="width:100%; border-radius:8px; margin-bottom:16px;">
+                    <h4>Downtown City Center</h4>
+                    <p style="color:var(--text-muted); font-size:14px; margin-top:8px;">High frequency buses available every 10 mins. Peak hours 9AM - 11AM.</p>
+                </div>
+                <div class="card">
+                    <img src="https://via.placeholder.com/300x150/16a34a/ffffff?text=Intl+Airport" style="width:100%; border-radius:8px; margin-bottom:16px;">
+                    <h4>International Airport</h4>
+                    <p style="color:var(--text-muted); font-size:14px; margin-top:8px;">Premium AC buses and cabs directly from Central Station.</p>
+                </div>
+                <div class="card">
+                    <img src="https://via.placeholder.com/300x150/16a34a/ffffff?text=University+Campus" style="width:100%; border-radius:8px; margin-bottom:16px;">
+                    <h4>University District</h4>
+                    <p style="color:var(--text-muted); font-size:14px; margin-top:8px;">E-Rickshaws and regular buses are highly active here. Student passes accepted.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="page-about" class="page">
+        <div class="container app-content" style="max-width: 800px;">
+            <div class="card" style="text-align:center; padding: 60px 24px;">
+                <i data-lucide="info" style="width:64px; height:64px; color:var(--primary); margin-bottom:24px;"></i>
+                <h2>About System</h2>
+                <p style="color:var(--text-muted); max-width:500px; margin:16px auto 32px; line-height:1.6;">
+                    Providing continuous, transparent and smart transport management solutions ensuring daily commuting is smooth, affordable, and fully trackable.
+                </p>
+                <div style="display:flex; justify-content:center; gap:40px;">
+                    <div>
+                        <div style="font-size:32px; font-weight:700; color:var(--primary);">124k+</div>
+                        <div style="font-size:14px; color:var(--text-muted);">Total Rides Completed</div>
+                    </div>
+                    <div>
+                        <div style="font-size:32px; font-weight:700; color:var(--primary);">482</div>
+                        <div style="font-size:14px; color:var(--text-muted);">Ongoing Rides</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="page-help" class="page">
+        <div class="container app-content" style="max-width: 600px;">
+            <h2 style="margin-bottom: 24px;">Help & Support</h2>
+            <div class="card">
+                <p style="margin-bottom: 20px; color:var(--text-muted);">Need assistance? Write to our support team and we will get back to you shortly.</p>
+                <div class="form-group">
+                    <label>Subject</label>
+                    <input type="text" class="form-control" placeholder="E.g. Fare deduction issue">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea class="form-control" rows="4" placeholder="Describe your problem..."></textarea>
+                </div>
+                <button class="btn btn-primary">Submit Ticket</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Flow Modal Overlay -->
+    <div class="modal-overlay" id="booking-modal">
+        <div class="modal-content">
+            
+            <!-- Step 1: Searching -->
+            <div class="booking-step active" id="step-search">
+                <div class="loader"></div>
+                <h3 style="margin-bottom:8px;">Searching for nearby drivers...</h3>
+                <p style="color:var(--text-muted); font-size:14px;">This usually takes a few seconds.</p>
+            </div>
+
+            <!-- Step 2: Driver Found -->
+            <div class="booking-step" id="step-found">
+                <i data-lucide="check-circle" class="success-icon" style="background:#22c55e;"></i>
+                <h3 style="margin-bottom:16px;">Driver Found!</h3>
+                <div class="driver-info">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                        <span style="font-weight:600;">Michael Smith</span>
+                        <span style="color: #eab308; display:flex; align-items:center; gap:4px;"><i data-lucide="star" style="width:14px;"></i> 4.8</span>
+                    </div>
+                    <div style="font-size:14px; color:var(--text-muted); margin-bottom:8px;">Vehicle: Toyota Prius (White)</div>
+                    <div style="font-size:16px; font-weight:700; letter-spacing:2px; padding:4px 8px; background:white; display:inline-block; border:1px solid var(--border-color); border-radius:4px;">GW-04-AB-1234</div>
+                    <div style="margin-top:16px; font-size:14px;"><strong>Arriving in:</strong> 3 mins</div>
+                </div>
+                <button class="btn btn-primary" style="width:100%;" onclick="nextBookingStep('step-otp')">Proceed to OTP</button>
+            </div>
+
+            <!-- Step 3: OTP Verfication -->
+            <div class="booking-step" id="step-otp">
+                <h3 style="margin-bottom:8px;">Verify Your Ride</h3>
+                <p style="color:var(--text-muted); font-size:14px;">Share this OTP with the driver before starting the trip.</p>
+                <div class="otp-inputs">
+                    <input type="text" class="otp-input" value="4" readonly>
+                    <input type="text" class="otp-input" value="8" readonly>
+                    <input type="text" class="otp-input" value="2" readonly>
+                    <input type="text" class="otp-input" value="9" readonly>
+                </div>
+                <button class="btn btn-primary" style="width:100%; margin-top:16px;" onclick="nextBookingStep('step-success')">Simulate Driver Entry</button>
+            </div>
+
+            <!-- Step 4: Success -->
+            <div class="booking-step" id="step-success">
+                <i data-lucide="party-popper" class="success-icon"></i>
+                <h3 style="margin-bottom:8px;">Ride Booked Successfully</h3>
+                <p style="color:var(--text-muted); font-size:14px; margin-bottom:24px;">Your journey has started. Track your route in the dashboard.</p>
+                <button class="btn btn-primary" style="width:100%;" onclick="closeBookingModal()">Done</button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- JS Logic -->
+    <script src="app.js"></script>
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>
