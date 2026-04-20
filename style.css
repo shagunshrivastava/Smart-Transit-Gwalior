@@ -1214,3 +1214,85 @@ tbody td {
 }/ *   C o m p l e t e   P r o j e c t   S y n c   V e r i f i e d   -   E x e c u t i o n   A p p l i e d   * /  
  . l u c i d e   {   d i s p l a y :   i n l i n e - b l o c k ;   v e r t i c a l - a l i g n :   m i d d l e ;   }  
  
+
+/* ====== NEW DASHBOARD & MODAL UI OVERRIDES ====== */
+.dashboard-grid {
+  display: grid !important;
+  grid-template-columns: 6.5fr 3.5fr !important;
+  gap: 32px !important;
+  align-items: start !important;
+}
+@media (max-width: 1200px) {
+  .dashboard-grid {
+    grid-template-columns: 6fr 4fr !important;
+  }
+}
+@media (max-width: 992px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr !important;
+    flex-direction: column-reverse !important;
+    display: flex !important;
+  }
+}
+
+/* ====== NEW LOGIN SPLIT WRAPPER ====== */
+.login-split-wrapper {
+  display: flex;
+  min-height: 100vh;
+  background: var(--bg-darkest);
+}
+.login-image-panel {
+  display: none;
+}
+@media (min-width: 768px) and (max-width: 991px) {
+  .login-split-wrapper {
+    flex-direction: column;
+    align-items: center;
+    padding: 100px 24px 40px;
+    gap: 32px;
+  }
+  .login-image-panel {
+    display: block;
+    width: 100%;
+    max-width: 600px;
+    height: 300px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+  }
+  .login-image-panel img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .login-form-panel {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+}
+@media (min-width: 992px) {
+  .login-split-wrapper {
+    flex-direction: row;
+  }
+  .login-image-panel {
+    display: block;
+    flex: 0 0 50%;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+  }
+  .login-image-panel img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .login-form-panel {
+    flex: 0 0 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 40px 40px;
+    min-height: 100vh;
+  }
+}

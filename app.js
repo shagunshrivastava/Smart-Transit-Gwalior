@@ -260,7 +260,15 @@ async function calculateFare() {
         if (res.ok) {
             document.getElementById('res-fare').textContent = data.fare;
             document.getElementById('res-distance').textContent = data.distance + ' km';
-            document.getElementById('res-time').textContent = Math.round(data.distance * 2.5) + ' mins';
+            
+            // New Journey details population
+            let parsedDist = parseFloat(data.distance);
+            let parsedFare = parseFloat(data.fare);
+            let ratePerKm = (parsedDist > 0 && !isNaN(parsedDist)) ? (parsedFare / parsedDist).toFixed(2) : "0.00";
+            
+            if(document.getElementById('res-rate')) document.getElementById('res-rate').textContent = '₹ ' + ratePerKm + ' / km';
+            if(document.getElementById('res-source-disp')) document.getElementById('res-source-disp').textContent = src;
+            if(document.getElementById('res-dest-disp')) document.getElementById('res-dest-disp').textContent = dest;
             
             lastTripData = {
                 source: src,

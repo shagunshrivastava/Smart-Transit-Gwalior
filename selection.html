@@ -123,10 +123,30 @@
               style="text-align: center; font-size: 14px; color: var(--text-secondary); min-height: 24px;"></div>
           </div>
 
-          <!-- Result Card -->
+                    <!-- Result Card -->
           <div class="result-card" id="result-card">
-            <div class="result-route-timeline" id="res-timeline">
-              <!-- Rendered via JS -->
+            
+            <div style="margin-bottom: 20px; text-align: center;">
+               <h3 style="margin:0; font-size: 18px; color: var(--text-primary);">Journey Details</h3>
+            </div>
+
+            <div class="result-details" style="grid-template-columns: 1fr 1fr; margin-bottom: 24px;">
+              <div class="result-detail-item">
+                <div class="detail-label">Source</div>
+                <div class="detail-value" id="res-source-disp" style="font-size: 13px;">–</div>
+              </div>
+              <div class="result-detail-item">
+                <div class="detail-label">Destination</div>
+                <div class="detail-value" id="res-dest-disp" style="font-size: 13px;">–</div>
+              </div>
+              <div class="result-detail-item">
+                <div class="detail-label">Distance</div>
+                <div class="detail-value" id="res-distance">–</div>
+              </div>
+              <div class="result-detail-item">
+                <div class="detail-label">Rate (per km)</div>
+                <div class="detail-value" id="res-rate">₹ 0.00 / km</div>
+              </div>
             </div>
 
             <div class="result-fare">
@@ -134,25 +154,6 @@
               <div class="fare-amount">
                 <span class="fare-symbol">₹</span>
                 <span id="res-fare">0</span>
-              </div>
-            </div>
-
-            <div class="result-details">
-              <div class="result-detail-item">
-                <div class="detail-label">Distance</div>
-                <div class="detail-value" id="res-distance">– km</div>
-              </div>
-              <div class="result-detail-item">
-                <div class="detail-label">Route Type</div>
-                <div class="detail-value">🚌 City Bus</div>
-              </div>
-              <div class="result-detail-item">
-                <div class="detail-label">Category</div>
-                <div class="detail-value">General</div>
-              </div>
-              <div class="result-detail-item">
-                <div class="detail-label">Est. Travel Time</div>
-                <div class="detail-value" id="res-time">– mins</div>
               </div>
             </div>
 
